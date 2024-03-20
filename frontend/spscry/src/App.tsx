@@ -1,5 +1,9 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
+import { Outlet, Link } from "react-router-dom";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import "@rainbow-me/rainbowkit/styles.css";
+
 import viteLogo from '/vite.svg'
 import './App.css'
 
