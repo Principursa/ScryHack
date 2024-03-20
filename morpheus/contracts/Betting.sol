@@ -22,9 +22,10 @@ interface Morpheus {
 }
 
 contract Betting {
+    int version = 1;
     Morpheus public morpheus;
-    uint oracleFee = 100000000000000;
-    uint nID;
+    uint oracleFee = 100000000000000; // 0.0001 ETH
+    uint256[] IDs;
     string endPoint =
         "https://api.the-odds-api.com/v4/sports/basketball_nba/odds?regions=us&oddsFormat=american&apiKey=43145865a7fde566bbe6c18da6aeb40d";
 
@@ -33,7 +34,11 @@ contract Betting {
         morpheus = Morpheus(0x0000000000071821e8033345A7Be174647bE0706);
     }
 
-    function request() external returns (uint256[] memory feeds) {
+    function getIDs() public view returns (uint256[] memory) {
+        return IDs;
+    }
+
+    function request() public payable {
         string[] memory apiEndpoint = new string[](1);
         apiEndpoint[0] = endPoint;
 
@@ -48,12 +53,11 @@ contract Betting {
         // This is the bounty amount that you want to pay for the API request. You need to pass it as an array of uint256 values
         uint256[] memory bounties = new uint256[](1);
         bounties[0] = oracleFee;
-        feeds = morpheus.requestFeeds{value: oracleFee}(
+        IDs = morpheus.requestFeeds{value: oracleFee}(
             apiEndpoint,
             apiEndpointPath,
             decimals,
             bounties
         );
-        return feeds;
     }
 }
