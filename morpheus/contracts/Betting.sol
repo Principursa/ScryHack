@@ -1,4 +1,6 @@
-pragma solidity ^0.8.0;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.7.6;
+pragma abicoder v2;
 
 interface Morpheus {
     function getFeed(
@@ -22,20 +24,33 @@ interface Morpheus {
 }
 
 contract Betting {
-    int version = 1;
+    int version = 2;
     Morpheus public morpheus;
     uint oracleFee = 100000000000000; // 0.0001 ETH
     uint256[] IDs;
-    string endPoint =
-        "https://api.the-odds-api.com/v4/sports/basketball_nba/odds?regions=us&oddsFormat=american&apiKey=43145865a7fde566bbe6c18da6aeb40d";
+    string endPoint = "http://localhost:3000";
 
-    constructor() {
-        // constructor(address oracleAddress) {
-        morpheus = Morpheus(0x0000000000071821e8033345A7Be174647bE0706);
+    constructor(address oracleAddress) {
+        morpheus = Morpheus(oracleAddress);
     }
 
     function getIDs() public view returns (uint256[] memory) {
         return IDs;
+    }
+
+    function getFeed(
+        uint256 feedID
+    )
+        public
+        view
+        returns (
+            uint256 value,
+            uint256 decimals,
+            uint256 timestamp,
+            string memory valStr
+        )
+    {
+        return morpheus.getFeed(feedID);
     }
 
     function request() public payable {

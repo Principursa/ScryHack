@@ -1,9 +1,10 @@
 import { HardhatUserConfig } from 'hardhat/config';
 import '@nomicfoundation/hardhat-toolbox';
+require('./task.js');
 require('dotenv').config();
 
 const config: HardhatUserConfig = {
-    solidity: '0.8.0',
+    solidity: '0.7.6',
     defaultNetwork: 'hardhat',
     etherscan: {
         apiKey: process.env.ETHERSCAN_API_KEY,
@@ -15,6 +16,11 @@ const config: HardhatUserConfig = {
     networks: {
         hardhat: {
             chainId: 1337,
+        },
+        truffle: {
+            chainId: 1337,
+            url: 'http://127.0.0.1:7545',
+            accounts: ['0x731ac1f58e6acf2ba1cdc21c114fc4f7730db111b17760f11756e945575d5a8f'],
         },
         sepolia: {
             chainId: 11155111,
