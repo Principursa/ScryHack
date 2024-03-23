@@ -28,14 +28,53 @@ contract Betting {
     Morpheus public morpheus;
     uint oracleFee = 100000000000000; // 0.0001 ETH
     uint256[] IDs;
-    string endPoint = "http://localhost:3000";
+    string endPoint =
+        "https://api.exchange.coinbase.com/products/ETH-USD/stats/";
 
-    constructor(address oracleAddress) {
-        morpheus = Morpheus(oracleAddress);
+    string path = "open,last";
+
+    constructor() {
+        morpheus = Morpheus(0x0000000000071821e8033345A7Be174647bE0706);
     }
 
-    function getIDs() public view returns (uint256[] memory) {
-        return IDs;
+    function setEndPoint(string memory _endPoint, string memory _path) public {
+        endPoint = _endPoint;
+        path = _path;
+    }
+
+    function getEndPoint() public view returns (string memory, string memory) {
+        return (endPoint, path);
+    }
+
+    function getIDs() public view returns (string[] memory) {
+        string[] memory idStrings = new string[](IDs.length);
+        for (uint256 i = 0; i < IDs.length; i++) {
+            idStrings[i] = uintToString(IDs[i]);
+        }
+        return idStrings;
+    }
+
+    function uintToString(uint256 value) internal pure returns (string memory) {
+        if (value == 0) {
+            return "0";
+        }
+        uint256 temp = value;
+        uint256 digits;
+        while (temp != 0) {
+            digits++;
+            temp /= 10;
+        }
+        bytes memory buffer = new bytes(digits);
+        while (value != 0) {
+            digits -= 1;
+            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
+            value /= 10;
+        }
+        return string(buffer);
+    }
+
+    function test() public pure returns (uint256) {
+        return 1;
     }
 
     function getFeed(
@@ -59,7 +98,7 @@ contract Betting {
 
         // path to the object within the api response
         string[] memory apiEndpointPath = new string[](1);
-        apiEndpointPath[0] = "";
+        apiEndpointPath[0] = path;
 
         // This is the number of decimals that you want to use for the API response. You need to pass it as an array of uint256 values.
         uint256[] memory decimals = new uint256[](1);

@@ -1,6 +1,6 @@
 import { HardhatUserConfig } from 'hardhat/config';
 import '@nomicfoundation/hardhat-toolbox';
-require('./task.js');
+// require('./task.js');
 require('dotenv').config();
 
 const config: HardhatUserConfig = {
