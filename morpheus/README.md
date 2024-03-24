@@ -48,3 +48,35 @@ User Flow:
 3. User selects amount ETH
 4. User clicks bet startBetProcess(gameId, uint bet)
 5. User confirms transaction finalizeBetProcess(feedID, betId)
+
+# Point Spreads Betting
+
+Better A bets on Warriors with 1eth
+Better B bets on Lakers with 1eth
+
+Lakers vs Warriors
+Lakers have a point -6 spread
+Warriors have a point +6 spread
+
+So that people who bet on Lakers will win if Lakers win by more than 6 points
+So that people who bet on Warriors will win if Lakers win by less than 6 points or if Lakers loose
+
+Case 1 (Lakers win by more than 6 points)
+Better B wins -> (Total Pot) / Total betters
+
+Case 2 (Lakers win by more than 6 points and we have two winners and three betters)
+
+((Total Pot) / Total betters) / total winners = one winner amount
+
+Have function which calls api to get game result and then pays out winnings
+CheckGameResults(gameId)
+
+-   first check if anyone betted on that game
+-   if true
+
+    -   get game result
+    -   "a:6" or "b"
+
+-   distribute(feedID)
+    -   check if any better won
+    -   calculate the amount to pay out
