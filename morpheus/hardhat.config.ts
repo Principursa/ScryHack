@@ -1,10 +1,13 @@
 import { HardhatUserConfig } from 'hardhat/config';
 import '@nomicfoundation/hardhat-toolbox';
+import '@nomicfoundation/hardhat-ignition-ethers';
+import '@nomicfoundation/hardhat-ethers';
+
 // require('./task.js');
 require('dotenv').config();
 
 const config: HardhatUserConfig = {
-    solidity: '0.7.6',
+    solidity: '0.8.20',
     defaultNetwork: 'hardhat',
     etherscan: {
         apiKey: process.env.ETHERSCAN_API_KEY,
