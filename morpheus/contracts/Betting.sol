@@ -309,7 +309,7 @@ contract Betting {
         bounties[1] = bountie;
 
         return
-            morpheus.requestFeeds{value: oracleFee}(
+            morpheus.requestFeeds{value: oracleFee + oracleFee}(
                 endPoint,
                 path,
                 decimals,
