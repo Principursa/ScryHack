@@ -8,7 +8,12 @@ import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { WagmiProvider } from "wagmi";
 import { config } from "./configs/config";
 import Landing from "./routes/Landing";
-import Moneyline from "./routes/Moneyline";
+import { Router } from "../node_modules/react-router-dom/dist/index";
+import Upcoming from "./routes/Upcoming";
+import Finished from "./routes/Finished";
+
+
+//Was thinking to have pages for the landing, upcoming games and finished games.
 
 const router = createBrowserRouter([
   {
@@ -16,13 +21,17 @@ const router = createBrowserRouter([
     element: <Landing/>
   },
   {
-    path: "/App",
+    path: "/app",
     element: <App/>,
     children: [
       {
-        path: "bets",
-        element: <Moneyline/>,
-      }
+        path: "",
+        element: <Upcoming/>,
+      },
+      {
+        path: "finished",
+        element: <Finished/> ,
+      },
     ]
   }
 ])
@@ -34,8 +43,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
-          <App />
+        <RainbowKitProvider className="m-0">
+          <RouterProvider router={router} className="m-0"/>
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

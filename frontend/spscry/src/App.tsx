@@ -1,28 +1,23 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import { Outlet, Link } from "react-router-dom";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+
 import "@rainbow-me/rainbowkit/styles.css";
 
-import viteLogo from '/vite.svg'
-import './App.css'
+import viteLogo from "/vite.svg";
+import "./App.css";
+import Navbar from "./Navbar";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
     <>
-      <div>
-        <p>
-          Scry SportsBetting app
-        </p>
-
+      <div className="h-screen w-screen bg-white">
+        <Navbar/>
+      
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

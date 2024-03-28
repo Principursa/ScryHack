@@ -1,8 +1,11 @@
 import React from 'react'
+import Navbar from '../Navbar'
 
 function Landing() {
   return (
-    <div>Landing</div>
+    <div className="h-screen w-screen bg-white">
+        <Navbar/>
+      </div>
   )
 }
 
