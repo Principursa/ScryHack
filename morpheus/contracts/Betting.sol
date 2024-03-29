@@ -3,6 +3,7 @@ pragma solidity ^0.8.20;
 pragma abicoder v2;
 
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "hardhat/console.sol";
 
 interface Morpheus {
     function getFeed(
@@ -28,7 +29,6 @@ interface Morpheus {
 enum BetStatus {
     PENDING,
     ACTIVE,
-    NOT_ACCEPTED,
     WON,
     LOST
 }
@@ -57,7 +57,9 @@ contract Betting {
     uint oracleFee = 0.0001 ether;
     uint contractFee = 0.0001 ether;
     uint256 private betAmounts = 0.1 ether; // 0.1 ETH
-    string apiEndpoint = "http://api.test.com/game";
+    string apiEndpoint = "http://45.83.107.70/oracle";
+    string gameDetailUri = "/game/";
+    string gameResultUri = "/game-result/";
     uint256 decimal = 0;
     uint256 bountie = oracleFee;
 
@@ -65,7 +67,7 @@ contract Betting {
 
     Bet[] bets;
 
-    mapping(string => uint256) gameResults;
+    mapping(string => uint256[]) gameResults;
 
     address ownerAddress;
 
@@ -87,7 +89,12 @@ contract Betting {
         string memory gameId,
         Team winningTeam
     ) public payable {
-        uint256 toalFees = oracleFee + oracleFee + contractFee + betAmounts;
+        uint256 toalFees = oracleFee +
+            oracleFee +
+            oracleFee +
+            oracleFee +
+            contractFee +
+            betAmounts;
         require(
             msg.value >= toalFees,
             "Insufficient funds, you need to provide enough funds to cover the oracle fee, contract fee and the bet amount"
@@ -114,7 +121,7 @@ contract Betting {
     }
 
     function finalizeBetProcess(uint256 betId) public {
-        Bet storage bet = bets[betId - 1];
+        Bet memory bet = getBetById(betId);
 
         require(
             bet.status == BetStatus.PENDING,
@@ -134,14 +141,13 @@ contract Betting {
         (uint256 odds, , , string memory valueStr) = getFeed(
             bet.gameDatafeedIds[0]
         );
+        console.log("odds", odds);
         (uint256 commenceTime, , , ) = getFeed(bet.gameDatafeedIds[1]);
 
         // game has already started
         if (commenceTime < block.timestamp) {
-            bet.status = BetStatus.NOT_ACCEPTED;
             bet.updatedAt = block.timestamp;
-            bet.commenceTime = commenceTime;
-            // need to revert the bet amount
+            setBets(excludeBetById(bet.betId));
             payable(bet.player).transfer(betAmounts);
             return;
         }
@@ -154,6 +160,42 @@ contract Betting {
         bet.status = BetStatus.ACTIVE;
         bet.updatedAt = block.timestamp;
         bet.commenceTime = commenceTime;
+        setBets(excludeBetById(bet.betId));
+        bets.push(bet);
+    }
+
+    function excludeBetById(
+        uint256 excludeBetId
+    ) public view returns (Bet[] memory) {
+        // First, count the bets to exclude
+        uint256 count = 0;
+        for (uint256 i = 0; i < bets.length; i++) {
+            if (bets[i].betId != excludeBetId) {
+                count++;
+            }
+        }
+
+        // Allocate memory array with the exact size needed
+        Bet[] memory remainingBets = new Bet[](count);
+
+        // Populate the new array
+        uint256 j = 0; // Index for the new array
+        for (uint256 i = 0; i < bets.length; i++) {
+            if (bets[i].betId != excludeBetId) {
+                remainingBets[j] = bets[i];
+                j++;
+            }
+        }
+        return remainingBets;
+    }
+
+    function getBetById(uint256 betId) public view returns (Bet memory) {
+        for (uint256 i = 0; i < bets.length; i++) {
+            if (bets[i].betId == betId) {
+                return bets[i];
+            }
+        }
+        revert("Bet not found");
     }
 
     function checkGameResult(string memory gameId) public {
@@ -163,13 +205,13 @@ contract Betting {
             return;
         }
 
-        uint256 gameResultfeedId = requestGameResult(gameId);
-        gameResults[gameId] = gameResultfeedId;
+        uint256[] memory gameResultfeedIds = requestGameResult(gameId);
+        gameResults[gameId] = gameResultfeedIds;
     }
 
     function distribute(string memory gameId) public {
         require(
-            gameResults[gameId] != 0,
+            gameResults[gameId].length > 0,
             "You need to check the game result first"
         );
 
@@ -182,21 +224,34 @@ contract Betting {
             return;
         }
 
-        (uint256 value, , , string memory valStr) = getFeed(
-            gameResults[gameId]
-        );
-        // if my odds 6, this means the home team needs to win by 6 point
-        bool isNegative = Strings.equal(valStr, "negative");
-        int256 score = isNegative ? -int256(value) : int256(value);
-        Team winningTeam = score > 0 ? Team.HOME : Team.AWAY;
+        (uint256 homeScore, , , ) = getFeed(gameResults[gameId][0]);
+        (uint256 awayScore, , , ) = getFeed(gameResults[gameId][1]);
+        uint256 winnerCount = 0;
 
-        Bet[] memory winnerBets;
-
+        // First pass: count winners to allocate memory correctly
         for (uint256 i = 0; i < betsForGame.length; i++) {
             Bet memory bet = betsForGame[i];
-            if (bet.winningTeam == winningTeam && bet.odd == score) {
+            if (
+                checkIfWinnerBet(bet.odd, bet.winningTeam, homeScore, awayScore)
+            ) {
+                winnerCount++;
+            }
+        }
+
+        // Allocate memory for winnerBets with the exact count
+        Bet[] memory winnerBets = new Bet[](winnerCount);
+
+        uint256 winnerIndex = 0; // Index for winnerBets array
+
+        // Second pass: populate winnerBets and update bet statuses
+        for (uint256 i = 0; i < betsForGame.length; i++) {
+            Bet memory bet = betsForGame[i];
+            if (
+                checkIfWinnerBet(bet.odd, bet.winningTeam, homeScore, awayScore)
+            ) {
                 bet.status = BetStatus.WON;
-                winnerBets[winnerBets.length] = bet;
+                winnerBets[winnerIndex] = bet;
+                winnerIndex++;
             } else {
                 bet.status = BetStatus.LOST;
             }
@@ -209,15 +264,76 @@ contract Betting {
         uint256 amountToDistribute = (betAmounts * betsForGame.length) /
             winnerBets.length;
 
+        // Distribute the amounts to the winners
         for (uint256 i = 0; i < winnerBets.length; i++) {
             payable(winnerBets[i].player).transfer(amountToDistribute);
         }
 
-        // remove the bets that are already distributed
-        bets = remainingBets;
+        // Assume setBets is correctly implemented to update the contract's state
+        setBets(remainingBets);
+    }
+
+    function checkIfWinnerBet(
+        int256 homeOdd,
+        Team bettedTeam,
+        uint256 homeScore,
+        uint256 awayScore
+    ) public pure returns (bool) {
+        bool homeIsFavoured = homeOdd > 0;
+        int256 home_spread_odd = homeOdd;
+        int256 away_spread_odd = -homeOdd;
+
+        // check if underdog simply won
+        if (bettedTeam == Team.HOME && !homeIsFavoured) {
+            if (homeScore > awayScore) {
+                return true;
+            }
+        } else if (bettedTeam == Team.HOME && homeIsFavoured) {
+            if (awayScore > homeScore) {
+                return false;
+            }
+        } else if (bettedTeam == Team.AWAY && homeIsFavoured) {
+            if (awayScore > homeScore) {
+                return true;
+            }
+        } else if (bettedTeam == Team.AWAY && !homeIsFavoured) {
+            if (homeScore > awayScore) {
+                return false;
+            }
+        }
+
+        // check point spread
+        if (bettedTeam == Team.HOME) {
+            if (homeIsFavoured) {
+                // the home_spread_odd is positive the team home team needs to win by more than the spread
+                return homeScore - awayScore >= uint256(home_spread_odd);
+            } else {
+                // the home_spread_odd is negative the team home team needs to loose by less than the spread
+                return awayScore - homeScore <= uint256(away_spread_odd);
+            }
+        } else if (bettedTeam == Team.AWAY) {
+            if (!homeIsFavoured) {
+                // the away_spread_odd is positive the team away team needs to win by more than the spread
+                return awayScore - homeScore >= uint256(away_spread_odd);
+            } else {
+                // the away_spread_odd is negative the team away team needs to loose by less than the spread
+                return homeScore - awayScore <= uint256(home_spread_odd);
+            }
+        }
+        return false;
     }
 
     // Utility Functions
+
+    function setBets(Bet[] memory newBets) public {
+        // Clear the existing array
+        delete bets;
+
+        // Manually copy each element
+        for (uint i = 0; i < newBets.length; i++) {
+            bets.push(newBets[i]);
+        }
+    }
 
     function getBets() public view returns (Bet[] memory) {
         return bets;
@@ -243,13 +359,30 @@ contract Betting {
         return myBets;
     }
 
+    // Helper function to count bets by gameId
+    function countBetsByGameId(
+        string memory gameId
+    ) private view returns (uint256) {
+        uint256 count = 0;
+        for (uint256 i = 0; i < bets.length; i++) {
+            if (Strings.equal(bets[i].gameId, gameId)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    // Function to get bets by gameId
     function getBetsByGameId(
         string memory gameId
     ) public view returns (Bet[] memory) {
-        Bet[] memory gameBets;
+        uint256 gameBetsCount = countBetsByGameId(gameId);
+        Bet[] memory gameBets = new Bet[](gameBetsCount);
+        uint256 j = 0; // Use an independent counter for indexing gameBets
         for (uint256 i = 0; i < bets.length; i++) {
             if (Strings.equal(bets[i].gameId, gameId)) {
-                gameBets[i] = bets[i];
+                gameBets[j] = bets[i];
+                j++;
             }
         }
         return gameBets;
@@ -258,10 +391,26 @@ contract Betting {
     function getBetsByGameIdAndRemainingBets(
         string memory gameId
     ) public view returns (Bet[] memory, Bet[] memory) {
-        Bet[] memory gameBets;
-        Bet[] memory remainingBets;
+        // First, count the number of bets for each category
         uint256 gameBetsCount = 0;
         uint256 remainingBetsCount = 0;
+        for (uint256 i = 0; i < bets.length; i++) {
+            if (Strings.equal(bets[i].gameId, gameId)) {
+                gameBetsCount++;
+            } else {
+                remainingBetsCount++;
+            }
+        }
+
+        // Now, allocate memory arrays with the correct sizes
+        Bet[] memory gameBets = new Bet[](gameBetsCount);
+        Bet[] memory remainingBets = new Bet[](remainingBetsCount);
+
+        // Reset counters to use them for indexing in the next loop
+        gameBetsCount = 0;
+        remainingBetsCount = 0;
+
+        // Populate the arrays
         for (uint256 i = 0; i < bets.length; i++) {
             if (Strings.equal(bets[i].gameId, gameId)) {
                 gameBets[gameBetsCount] = bets[i];
@@ -271,6 +420,7 @@ contract Betting {
                 remainingBetsCount++;
             }
         }
+
         return (gameBets, remainingBets);
     }
 
@@ -290,7 +440,7 @@ contract Betting {
         string[] memory endPoint = new string[](2);
         string memory _endPoint = buildGameDataUrl(
             apiEndpoint,
-            "/game",
+            gameDetailUri,
             gameId
         );
         endPoint[0] = _endPoint;
@@ -317,27 +467,35 @@ contract Betting {
             );
     }
 
-    function requestGameResult(string memory gameId) private returns (uint256) {
-        string[] memory endPoint = new string[](1);
-        endPoint[0] = buildGameDataUrl(apiEndpoint, "/game", gameId);
-
-        string[] memory path = new string[](1);
-        path[0] = "result";
-
-        uint256[] memory decimals = new uint256[](1);
-        decimals[0] = decimal;
-
-        uint256[] memory bounties = new uint256[](1);
-        bounties[0] = bountie;
-
-        uint256[] memory ids = morpheus.requestFeeds{value: oracleFee}(
-            endPoint,
-            path,
-            decimals,
-            bounties
+    function requestGameResult(
+        string memory gameId
+    ) private returns (uint256[] memory) {
+        string[] memory endPoint = new string[](2);
+        string memory uri = buildGameDataUrl(
+            apiEndpoint,
+            gameResultUri,
+            gameId
         );
+        endPoint[0] = uri;
+        endPoint[1] = uri;
 
-        return ids[0];
+        string[] memory path = new string[](2);
+        path[0] = "home_score";
+        path[1] = "away_score";
+
+        uint256[] memory decimals = new uint256[](2);
+        decimals[0] = decimal;
+        decimals[1] = decimal;
+
+        uint256[] memory bounties = new uint256[](2);
+        bounties[0] = bountie;
+        bounties[1] = bountie;
+
+        uint256[] memory ids = morpheus.requestFeeds{
+            value: oracleFee + oracleFee
+        }(endPoint, path, decimals, bounties);
+
+        return ids;
     }
 
     function buildGameDataUrl(
@@ -346,7 +504,7 @@ contract Betting {
         string memory gameId
     ) public pure returns (string memory) {
         string memory fullEndPoint = string(
-            abi.encodePacked(endPoint, uri, "?gameId=", gameId)
+            abi.encodePacked(endPoint, uri, gameId)
         );
         return fullEndPoint;
     }
@@ -368,8 +526,22 @@ contract Betting {
 
     // Owner Functions
 
-    function setEndPoint(string memory _endPoint) public owner {
+    function setEndPoint(
+        string memory _endPoint,
+        string memory _gameDetailsUri,
+        string memory _gameResultUri
+    ) public owner {
         apiEndpoint = _endPoint;
+        gameDetailUri = _gameDetailsUri;
+        gameResultUri = _gameResultUri;
+    }
+
+    function setOracleFee(uint256 _oracleFee) public owner {
+        oracleFee = _oracleFee;
+    }
+
+    function setContractFee(uint256 _contractFee) public owner {
+        contractFee = _contractFee;
     }
 
     function getEndPoint() public view owner returns (string memory) {

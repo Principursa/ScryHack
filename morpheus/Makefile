@@ -16,4 +16,4 @@ sepolia-contract:
 
 # make verify ADDRESS=<contract-address>
 verify: 
-	- npx hardhat verify ${ADDRESS} --network sepolia
+	- npx hardhat verify ${ADDRESS} ${ORACLE_ADDRESS} --network sepolia
