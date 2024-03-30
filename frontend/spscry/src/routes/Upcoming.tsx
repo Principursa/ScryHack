@@ -3,13 +3,10 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 import {
-  useAccount,
   useWriteContract,
   useReadContract,
-  useWatchPendingTransactions,
   useWaitForTransactionReceipt,
 } from "wagmi";
-import { type UseWriteContractReturnType } from 'wagmi'
 
 import returnlogo from "../utils/getLogos";
 import { Contracts } from "../Abis/contracts";
@@ -47,7 +44,7 @@ function Upcoming() {
   const { isPending, writeContract, isError, error } = useWriteContract();
 
   function placeBetInitial(id: string, team: number, teamname: string) {
-    const { data : trx } = writeContract({
+    const { data: trx } = writeContract({
       abi: bettingABI.abi,
       address: Contracts.bettingContract,
       functionName: "startBetProcess",
@@ -61,7 +58,7 @@ function Upcoming() {
         console.log("success from write contract");
       },
     });
-    console.log("hash",trx)
+    console.log("hash", trx);
     const result = useWaitForTransactionReceipt({
       hash: trx?.hash,
       confirmations: 1,
@@ -70,10 +67,14 @@ function Upcoming() {
           teamName: teamname,
           initiated: true,
         });
-        console.log("success from wait tx")
+        console.log("success from wait tx");
       },
     });
     console.log(result);
+    setTxInitiated({
+      teamName: teamname,
+      initiated: true,
+    });
 
     console.log(isError);
     console.log(error);
