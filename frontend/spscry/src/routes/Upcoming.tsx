@@ -1,12 +1,37 @@
-'use client';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+"use client";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-//import { useAccount, useWriteContract, useReadContract } from "wagmi";
 import { Table } from '#/components/Table';
 import { GamesForTable, gameObjectFE } from '#/types';
+import {
+  useWriteContract,
+ // useReadContract,
+ // useWaitForTransactionReceipt,
+} from "wagmi";
+
+import returnlogo from "../utils/getLogos";
+import { Contracts } from "../Abis/contracts";
+import bettingABI from "../Abis/Betting.json";
+import { parseEther } from "viem";
+import convertUnixToDate from "../utils/convertDate";
 
 const baseListUrl = ' https://eventbuddy.snake-py.com/game/list';
+
+interface gameObjectFE {
+  id: string;
+  home_team: string;
+  away_team: string;
+  home_points: number | string;
+  away_points: number | string;
+  commence_time: number; //in unix so smart contract conversion is easier
+}
+
+interface txInit {
+  teamName: string;
+  initiated: boolean;
+}
+
 
 const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () => void }) => {
     return (
@@ -66,6 +91,65 @@ function Upcoming() {
     const [Games, setGames] = useState<gameObjectFE[]>();
     const [modalGame, setModalGame] = useState<GamesForTable>();
     const [modalIsOpen, setIsOpen] = useState(false);
+      const [txInitiated, setTxInitiated] = useState<txInit>({
+    teamName: "",
+    initiated: false,
+  });
+  //Make this have a teamname + boolean structure
+
+  const { writeContract, isError, error } = useWriteContract();
+
+  function placeBetInitial(id: string, team: number, teamname: string) {
+    writeContract({
+      abi: bettingABI.abi,
+      address: Contracts.bettingContract,
+      functionName: "startBetProcess",
+      args: [id, team],
+      value: parseEther("0.1005"),
+    });
+    /* const result = useWaitForTransactionReceipt({
+      hash: trx?.hash,
+      confirmations: 1,
+      onSuccess: () => {
+        setTxInitiated({
+          teamName: teamname,
+          initiated: true,
+        });
+        console.log("success from wait tx");
+      },
+    });
+    console.log(result); */
+    setTxInitiated({
+      teamName: teamname,
+      initiated: true,
+    });
+
+    console.log(isError);
+    console.log(error);
+  }
+
+  function finalizeBet() {
+/*     const { data: bets } = useReadContract({
+      abi: bettingABI.abi,
+      address: Contracts.bettingContract,
+      functionName: "getMyBets",
+      args: [],
+    });
+    console.log("bets:", bets);
+    const length = bets.length;
+    const latestBet = bets[length - 1];
+    console.log("latestBet:", latestBet);
+    writeContract({
+      abi: bettingABI.abi,
+      address: Contracts.bettingContract,
+      functionName: "finalizeBetProcess",
+      args: [latestBet.betId],
+    });
+    setTxInitiated({
+      teamName: "",
+      initiated: false,
+    }); */
+  }
     useEffect(() => {
         axios.get(baseListUrl).then((response: any) => {
             console.log('response', response);
@@ -99,6 +183,7 @@ function Upcoming() {
             )}
         </>
     );
+
 }
 
 export default Upcoming;
