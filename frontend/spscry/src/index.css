@@ -34,12 +34,11 @@ body {
     display: flex;
     justify-content: center;
     padding-top: 10rem;
-    min-height: calc(90vh - 64px);
 }
 
 .glass-container {
-    min-width: 80vw;
-    min-height: 50vw;
+    width: 60vw;
+    height: 60vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
