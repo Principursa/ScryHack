@@ -58,7 +58,7 @@ contract Betting {
     uint oracleFee = 0.0001 ether;
     uint contractFee = 0.0001 ether;
     uint256 private betAmounts = 0.1 ether; // 0.1 ETH
-    string apiEndpoint = "http://45.83.107.70/oracle";
+    string apiEndpoint = "https://eventbuddy.snake-py.com/oracle";
     string gameDetailUri = "/game/";
     string gameResultUri = "/game-result/";
     uint256 decimal = 0;
