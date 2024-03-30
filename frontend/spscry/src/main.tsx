@@ -43,7 +43,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider className="m-0">
+        <RainbowKitProvider className="m-0" coolMode>
           <RouterProvider router={router} className="m-0"/>
         </RainbowKitProvider>
       </QueryClientProvider>

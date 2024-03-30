@@ -1,6 +1,7 @@
 import React from 'react'
 import { Outlet, Link } from "react-router-dom";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import "@rainbow-me/rainbowkit/styles.css";
 
 function Navbar() {
   return (
@@ -8,7 +9,7 @@ function Navbar() {
   <div className="bg-white w-screen p-4">
           <ul className="h-10 flex border-b-4 border-slate-300  flex-row justify-evenly items-center visited:text-white p-b-2">
             <li>
-              <Link to={"/"} className="text-black font-bold text-m m-2">SCRYSPORTS</Link>
+              <Link to={"/"} className="text-black font-bold text-m m-2">SCRYBALL</Link>
             </li>
             <li className="text-black">
               <Link

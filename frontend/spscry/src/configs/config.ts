@@ -1,5 +1,5 @@
 import { http, createConfig } from 'wagmi'
-import { mainnet, sepolia } from 'wagmi/chains'
+import { mainnet, sepolia,holesky } from 'wagmi/chains'
 
 
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
@@ -8,8 +8,9 @@ import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 export const config = getDefaultConfig({
   appName: "SPScry",
   projectId: 'b17dfb75dcaf111070742d4a6cbf0c5b',
-  chains: [sepolia],
+  chains: [sepolia,holesky],
   transports: {
     [sepolia.id]: http(),
+    [holesky.id]: http(),
   },
 })
