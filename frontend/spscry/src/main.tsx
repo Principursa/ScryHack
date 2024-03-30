@@ -11,8 +11,6 @@ import Upcoming from './routes/Upcoming';
 import Finished from './routes/Finished';
 import './index.css';
 
-//Was thinking to have pages for the landing, upcoming games and finished games.
-
 const router = createBrowserRouter([
     {
         path: '',

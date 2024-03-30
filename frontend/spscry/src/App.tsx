@@ -6,7 +6,10 @@ function App() {
     return (
         <>
             <Navbar />
-            <Outlet />
+            <div className="main-container ">
+                <Outlet />
+            </div>
+            <div className="background-player"></div>
         </>
     );
 }

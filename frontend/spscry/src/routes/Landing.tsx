@@ -1,13 +1,12 @@
-import BallPlayer from '../assets/BallPlayer.svg';
-
 function Landing() {
     return (
         <>
-            <div className="text-black">
-                <p>Welcome To ScryBall!</p>
-                <p>Here you can bet on BasketBall point spreads</p>
+            <div className="glass glass-container">
+                <div className="flex flex-col justify-center items-center text-white">
+                    <p>Welcome To ScryBall!</p>
+                    <p>Here you can bet on BasketBall point spreads</p>
+                </div>
             </div>
-            <img src={BallPlayer} alt="ballplayer" className="absolute bottom-0 " />
         </>
     );
 }
