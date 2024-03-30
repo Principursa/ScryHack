@@ -11,7 +11,7 @@ import {
 import returnlogo from "../utils/getLogos";
 import { Contracts } from "../Abis/contracts";
 import bettingABI from "../Abis/Betting.json";
-import { parseAbi, parseUnits, parseEther } from "viem";
+import { parseEther } from "viem";
 import convertUnixToDate from "../utils/convertDate";
 
 const baseListUrl = " https://eventbuddy.snake-py.com/game/list";
@@ -41,10 +41,10 @@ function Upcoming() {
   });
   //Make this have a teamname + boolean structure
 
-  const { isPending, writeContract, isError, error } = useWriteContract();
+  const { writeContract, isError, error } = useWriteContract();
 
   function placeBetInitial(id: string, team: number, teamname: string) {
-    const { data: trx } = writeContract({
+    writeContract({
       abi: bettingABI.abi,
       address: Contracts.bettingContract,
       functionName: "startBetProcess",
@@ -58,8 +58,7 @@ function Upcoming() {
         console.log("success from write contract");
       },
     });
-    console.log("hash", trx);
-    const result = useWaitForTransactionReceipt({
+    /* const result = useWaitForTransactionReceipt({
       hash: trx?.hash,
       confirmations: 1,
       onSuccess: () => {
@@ -70,7 +69,7 @@ function Upcoming() {
         console.log("success from wait tx");
       },
     });
-    console.log(result);
+    console.log(result); */
     setTxInitiated({
       teamName: teamname,
       initiated: true,
@@ -81,7 +80,7 @@ function Upcoming() {
   }
 
   function finalizeBet() {
-    const { data: bets } = useReadContract({
+/*     const { data: bets } = useReadContract({
       abi: bettingABI.abi,
       address: Contracts.bettingContract,
       functionName: "getMyBets",
@@ -91,7 +90,7 @@ function Upcoming() {
     const length = bets.length;
     const latestBet = bets[length - 1];
     console.log("latestBet:", latestBet);
-    const betTx = writeContract({
+    writeContract({
       abi: bettingABI.abi,
       address: Contracts.bettingContract,
       functionName: "finalizeBetProcess",
@@ -100,7 +99,7 @@ function Upcoming() {
     setTxInitiated({
       teamName: "",
       initiated: false,
-    });
+    }); */
   }
 
   useEffect(() => {
