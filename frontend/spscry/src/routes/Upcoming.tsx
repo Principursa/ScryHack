@@ -4,8 +4,8 @@ import axios from "axios";
 
 import {
   useWriteContract,
-  useReadContract,
-  useWaitForTransactionReceipt,
+ // useReadContract,
+ // useWaitForTransactionReceipt,
 } from "wagmi";
 
 import returnlogo from "../utils/getLogos";
@@ -50,13 +50,6 @@ function Upcoming() {
       functionName: "startBetProcess",
       args: [id, team],
       value: parseEther("0.1005"),
-      onSuccess: () => {
-        setTxInitiated({
-          teamName: teamname,
-          initiated: true,
-        });
-        console.log("success from write contract");
-      },
     });
     /* const result = useWaitForTransactionReceipt({
       hash: trx?.hash,
