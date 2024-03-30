@@ -7,7 +7,7 @@ import returnlogo from "../utils/getLogos";
 //import { parseAbi, parseUnits } from "viem";
 import convertUnixToDate from "../utils/convertDate";
 //import abi here
-const baseListUrl = "http://localhost:3000/game/list";
+const baseListUrl = " http://45.83.107.70/game/list";
 
 interface gameObjectFE {
   id: string;

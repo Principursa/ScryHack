@@ -3,7 +3,7 @@ import axios from "axios";
 import returnlogo from "../utils/getLogos";
 import convertUnixToDate from "../utils/convertDate";
 
-const baseListUrl = "http://localhost:3000/game-results/list";
+const baseListUrl = " http://45.83.107.70/game-results/list";
 
 interface GameResultFE {
   id: string;
