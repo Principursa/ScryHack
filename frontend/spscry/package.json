@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "bun tailwindcss -i ./src/index.css -o ./dist/output.css && bunx --bun vite",
+    "dev": "bun tailwindcss -i ./src/index.css -o ./dist/output.css && bunx --bun vite --force",
     "build": "bun tailwindcss -i ./src/index.css -o ./dist/output.css && tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"

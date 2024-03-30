@@ -5,7 +5,20 @@ import clsx from 'clsx';
 import { Fragment, PropsWithChildren } from 'react';
 
 const Cell = ({ colSpan, children }: { colSpan: number } & PropsWithChildren) => {
-    const classes = clsx('text-white py-5 text-center', `col-span-${colSpan}`);
+    const classes = clsx('text-white py-5 text-center', {
+        'col-span-1': colSpan === 1,
+        'col-span-2': colSpan === 2,
+        'col-span-3': colSpan === 3,
+        'col-span-4': colSpan === 4,
+        'col-span-5': colSpan === 5,
+        'col-span-6': colSpan === 6,
+        'col-span-7': colSpan === 7,
+        'col-span-8': colSpan === 8,
+        'col-span-9': colSpan === 9,
+        'col-span-10': colSpan === 10,
+        'col-span-11': colSpan === 11,
+        'col-span-12': colSpan === 12,
+    });
     return <div className={classes}>{children}</div>;
 };
 
@@ -15,7 +28,7 @@ function Table({ games, isNotResult }: { games: GamesForTable[]; isNotResult?: b
             <div
                 className="flex"
                 style={{
-                    minWidth: '70%',
+                    width: '70%',
                 }}
             >
                 <div className="w-full bg-my-bg-color neumorphism">

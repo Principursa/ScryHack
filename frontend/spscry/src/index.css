@@ -33,7 +33,7 @@ body {
 .main-container {
     display: flex;
     justify-content: center;
-    align-items: center;
+    padding-top: 10rem;
     min-height: calc(90vh - 64px);
 }
 
