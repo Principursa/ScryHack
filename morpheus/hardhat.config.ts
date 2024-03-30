@@ -30,6 +30,11 @@ const config: HardhatUserConfig = {
             url: 'https://rpc.sepolia.org',
             accounts: [process.env.PRIVATE_KEY as string],
         },
+        holesky: {
+            chainId: 17000,
+            url: 'https://17000.rpc.thirdweb.com',
+            accounts: [process.env.PRIVATE_KEY as string],
+        },
     },
 };
 

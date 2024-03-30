@@ -54,6 +54,7 @@ struct Bet {
 contract Betting {
     int version = 8;
     Morpheus public morpheus;
+    //100000000000000 wei
     uint oracleFee = 0.0001 ether;
     uint contractFee = 0.0001 ether;
     uint256 private betAmounts = 0.1 ether; // 0.1 ETH
@@ -247,7 +248,12 @@ contract Betting {
         for (uint256 i = 0; i < betsForGame.length; i++) {
             Bet memory bet = betsForGame[i];
             if (
-                checkIfWinnerBet(bet.odd, bet.winningTeam, homeScore, awayScore)
+                checkIfWinnerBet(
+                    bet.odd,
+                    bet.winningTeam,
+                    homeScore,
+                    awayScore
+                ) && bet.status == BetStatus.ACTIVE
             ) {
                 bet.status = BetStatus.WON;
                 winnerBets[winnerIndex] = bet;
@@ -443,11 +449,12 @@ contract Betting {
             gameDetailUri,
             gameId
         );
+        console.log("endPoint", _endPoint);
         endPoint[0] = _endPoint;
         endPoint[1] = _endPoint;
 
         string[] memory path = new string[](2);
-        path[0] = "odds";
+        path[0] = "home_points";
         path[1] = "commence_time";
 
         uint256[] memory decimals = new uint256[](2);
@@ -512,7 +519,7 @@ contract Betting {
     function getFeed(
         uint256 gamefeedID
     )
-        private
+        public
         view
         returns (
             uint256 _value,

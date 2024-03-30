@@ -37,21 +37,21 @@ describe('Betting', function async() {
         const MIN_PAYMENT = hre.ethers.parseEther('0.1005');
 
         const MockMorpheus = await hre.ethers.getContractFactory('MockMorpheus');
-        const currentTimestampInSeconds = Math.floor(new Date().getTime() / 1000);
+        const currentTimestamp = Math.floor(new Date().getTime() / 1000);
         const games = {
             homeScores: [50, 50, 50, 50, 50, 50, 50, 50, 50, 50],
             awayScores: [42, 43, 49, 50, 44, 51, 50, 50, 50, 50],
             commenceTimes: [
-                BigInt(currentTimestampInSeconds + 3600 * 24 * 7),
-                BigInt(currentTimestampInSeconds - 3600 * 24 * 7),
-                BigInt(currentTimestampInSeconds + 3600 * 24 * 7),
-                BigInt(currentTimestampInSeconds + 3600 * 24 * 7),
-                BigInt(currentTimestampInSeconds + 3600 * 24 * 7),
-                BigInt(currentTimestampInSeconds + 3600 * 24 * 7),
-                BigInt(currentTimestampInSeconds + 3600 * 24 * 7),
-                BigInt(currentTimestampInSeconds + 3600 * 24 * 7),
-                BigInt(currentTimestampInSeconds + 3600 * 24 * 7),
-                BigInt(currentTimestampInSeconds + 3600 * 24 * 7),
+                BigInt(currentTimestamp + 3600 * 24 * 7),
+                BigInt(currentTimestamp - 3600 * 24 * 7),
+                BigInt(currentTimestamp + 3600 * 24 * 7),
+                BigInt(currentTimestamp + 3600 * 24 * 7),
+                BigInt(currentTimestamp + 3600 * 24 * 7),
+                BigInt(currentTimestamp + 3600 * 24 * 7),
+                BigInt(currentTimestamp + 3600 * 24 * 7),
+                BigInt(currentTimestamp + 3600 * 24 * 7),
+                BigInt(currentTimestamp + 3600 * 24 * 7),
+                BigInt(currentTimestamp + 3600 * 24 * 7),
             ],
             odds: [7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
         };
