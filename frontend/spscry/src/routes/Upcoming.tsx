@@ -10,22 +10,12 @@ import {
  // useWaitForTransactionReceipt,
 } from "wagmi";
 
-import returnlogo from "../utils/getLogos";
 import { Contracts } from "../Abis/contracts";
 import bettingABI from "../Abis/Betting.json";
 import { parseEther } from "viem";
-import convertUnixToDate from "../utils/convertDate";
 
 const baseListUrl = ' https://eventbuddy.snake-py.com/game/list';
 
-interface gameObjectFE {
-  id: string;
-  home_team: string;
-  away_team: string;
-  home_points: number | string;
-  away_points: number | string;
-  commence_time: number; //in unix so smart contract conversion is easier
-}
 
 interface txInit {
   teamName: string;
@@ -91,7 +81,7 @@ function Upcoming() {
     const [Games, setGames] = useState<gameObjectFE[]>();
     const [modalGame, setModalGame] = useState<GamesForTable>();
     const [modalIsOpen, setIsOpen] = useState(false);
-      const [txInitiated, setTxInitiated] = useState<txInit>({
+   //const [txInitiated, setTxInitiated] = useState<txInit>({
     teamName: "",
     initiated: false,
   });
@@ -99,14 +89,14 @@ function Upcoming() {
 
   const { writeContract, isError, error } = useWriteContract();
 
-  function placeBetInitial(id: string, team: number, teamname: string) {
+ /* function placeBetInitial(id: string, team: number, teamname: string) {
     writeContract({
       abi: bettingABI.abi,
       address: Contracts.bettingContract,
       functionName: "startBetProcess",
       args: [id, team],
       value: parseEther("0.1005"),
-    });
+    });*/
     /* const result = useWaitForTransactionReceipt({
       hash: trx?.hash,
       confirmations: 1,
@@ -128,8 +118,8 @@ function Upcoming() {
     console.log(error);
   }
 
-  function finalizeBet() {
-/*     const { data: bets } = useReadContract({
+  /*function finalizeBet() {
+    const { data: bets } = useReadContract({
       abi: bettingABI.abi,
       address: Contracts.bettingContract,
       functionName: "getMyBets",
