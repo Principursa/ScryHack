@@ -6,7 +6,7 @@ export default {
             colors: {
                 'nba-blue': '#1D428A',
                 'nba-red': '#C8102E',
-                'my-bg-color': '#242424',
+                'my-bg-color': '#171717',
             },
         },
     },

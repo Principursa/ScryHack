@@ -20,14 +20,14 @@
 } */
 
 body {
-    background-color: #242424;
+    background-color: #171717;
     margin: 0;
     /* overflow: hidden; */
 }
 
 .neumorphism {
-    background: #242424;
-    box-shadow: 10px 10px 20px #1a1a1a, -3px -3px 20px #2e2e2e;
+    background: #171717;
+    box-shadow: 10px 10px 20px #111111, -3px -3px 20px #111111;
 }
 
 .main-container {
