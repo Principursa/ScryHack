@@ -22,7 +22,7 @@ interface gameObjectFE {
   "startBetProcess(string memory gameId, Team winningTeam)", //Might be some issues with the enum here
 ]);
  */
-function placeBet() {}
+//function placeBet() {}
 
 function Upcoming() {
   const [Games, setGames] = useState<gameObjectFE[]>();

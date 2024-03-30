@@ -30,17 +30,8 @@ import {
   UTA,
   WAS,
 } from "react-nba-logos";
-import { ComponentType, SVGAttributes } from "react";
 
-interface Props extends SVGAttributes<SVGElement> {
-  size?: string | number;
-}
 
-type Icon = ComponentType<Props>;
-
-interface logoList {
-  [key: string]: () => JSX.Element;
-}
 
 export default function returnlogo(name: string): any {
   if (name == "Atlanta Hawks") {
