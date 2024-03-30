@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import returnlogo from "../utils/getLogos";
 import convertUnixToDate from "../utils/convertDate";

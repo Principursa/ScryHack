@@ -1,42 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  ATL,
-  BKN,
-  CLE,
-  CHA,
-  CHI,
-  BOS,
-  MIA,
-  DAL,
-  DEN,
-  DET,
-  GSW,
-  HOU,
-  IND,
-  LAC,
-  LAL,
-  MEM,
-  MIL,
-  MIN,
-  NOP,
-  NYK,
-  OKC,
-  ORL,
-  PHI,
-  PHX,
-  POR,
-  SAC,
-  SAS,
-  TOR,
-  UTA,
-  WAS,
-} from "react-nba-logos";
-import { useAccount, useWriteContract, useReadContract } from "wagmi";
-import { Icon } from "../../node_modules/react-nba-logos/dist/index";
+
+//import { useAccount, useWriteContract, useReadContract } from "wagmi";
 import returnlogo from "../utils/getLogos";
-import { Contracts } from "../Abis/contracts";
-import { parseAbi, parseUnits } from "viem";
+//import { Contracts } from "../Abis/contracts";
+//import { parseAbi, parseUnits } from "viem";
 import convertUnixToDate from "../utils/convertDate";
 //import abi here
 const baseListUrl = "http://localhost:3000/game/list";
