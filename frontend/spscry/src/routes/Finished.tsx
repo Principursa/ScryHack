@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import returnlogo from '../utils/getLogos';
-import convertUnixToDate from '../utils/convertDate';
 import { Table } from '#/components/Table';
 import { GameResultFE } from '#/types';
 

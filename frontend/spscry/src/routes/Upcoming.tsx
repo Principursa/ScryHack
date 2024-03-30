@@ -19,7 +19,7 @@ function Upcoming() {
         console.log(Games);
     }, []);
 
-    return <>{Games ? <Table games={Games} /> : <></>}</>;
+    return <>{Games ? <Table isNotResult games={Games} /> : <></>}</>;
 }
 
 export default Upcoming;

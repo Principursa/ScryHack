@@ -1,17 +1,15 @@
-import { gameObjectFE } from '#/types';
+import { GamesForTable } from '#/types';
 import convertUnixToDate from '#/utils/convertDate';
 import returnlogo from '#/utils/getLogos';
 import clsx from 'clsx';
 import { Fragment, PropsWithChildren } from 'react';
 
 const Cell = ({ colSpan, children }: { colSpan: number } & PropsWithChildren) => {
-    console.log(`text-white py-5 col-span-${colSpan} text-center`);
     const classes = clsx('text-white py-5 text-center', `col-span-${colSpan}`);
-
     return <div className={classes}>{children}</div>;
 };
 
-function Table({ games }: { games: gameObjectFE[] }) {
+function Table({ games, isNotResult }: { games: GamesForTable[]; isNotResult?: boolean }) {
     return (
         <>
             <div
@@ -25,8 +23,8 @@ function Table({ games }: { games: gameObjectFE[] }) {
                         <Cell colSpan={2}>Date</Cell>
                         <Cell colSpan={2}>Home Team</Cell>
                         <Cell colSpan={2}>Away Team</Cell>
-                        <Cell colSpan={1}>Home Odds</Cell>
-                        <Cell colSpan={1}>Away Odds</Cell>
+                        <Cell colSpan={1}>{isNotResult ? 'Home Odds' : 'Home Score'}</Cell>
+                        <Cell colSpan={1}>{isNotResult ? 'Away Odds' : 'Away Score'}</Cell>
                         <Cell colSpan={1}>Current Bet</Cell>
                         <Cell colSpan={1}>Allowed Bet</Cell>
                         <Cell colSpan={2}>Action</Cell>
@@ -49,8 +47,12 @@ function Table({ games }: { games: gameObjectFE[] }) {
                                         {returnlogo(game.away_team)}
                                     </span>
                                 </Cell>
-                                <Cell colSpan={1}>{game.home_points}</Cell>
-                                <Cell colSpan={1}>{game.away_points}</Cell>
+                                <Cell colSpan={1}>
+                                    {isNotResult ? game.home_points : game.home_score}
+                                </Cell>
+                                <Cell colSpan={1}>
+                                    {isNotResult ? game.away_points : game.away_score}
+                                </Cell>
                                 <Cell colSpan={1}>No bets yet</Cell>
                                 <Cell colSpan={1}>No bets yet</Cell>
                                 <Cell colSpan={2}>Action</Cell>
