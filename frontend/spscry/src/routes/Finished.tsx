@@ -3,7 +3,7 @@ import axios from "axios";
 import returnlogo from "../utils/getLogos";
 import convertUnixToDate from "../utils/convertDate";
 
-const baseListUrl = "http://eventbuddy.snake-py.com/game-results/list";
+const baseListUrl = "https://eventbuddy.snake-py.com/game-results/list";
 
 interface GameResultFE {
   id: string;

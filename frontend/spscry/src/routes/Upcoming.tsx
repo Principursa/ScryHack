@@ -9,7 +9,7 @@ import returnlogo from '../utils/getLogos';
 import convertUnixToDate from '../utils/convertDate';
 //import abi here
 
-const baseListUrl = " http://eventbuddy.snake-py.com/game/list";
+const baseListUrl = " https://eventbuddy.snake-py.com/game/list";
 
 interface gameObjectFE {
     id: string;
