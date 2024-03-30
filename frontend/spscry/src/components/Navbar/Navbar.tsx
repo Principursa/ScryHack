@@ -30,7 +30,7 @@ const Logo = () => {
 function Navbar() {
     return (
         <>
-            <div className="w-full min-h-10 py-2 bg-gradient-to-r from-nba-blue to-nba-red flex">
+            <div className="w-full min-h-8 bg-gradient-to-r from-nba-blue to-nba-red flex">
                 <div className="flex justify-between w-full">
                     <div className="flex">
                         <Logo />

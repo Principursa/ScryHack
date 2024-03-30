@@ -22,7 +22,15 @@ const Cell = ({ colSpan, children }: { colSpan: number } & PropsWithChildren) =>
     return <div className={classes}>{children}</div>;
 };
 
-function Table({ games, isNotResult }: { games: GamesForTable[]; isNotResult?: boolean }) {
+function Table({
+    onClickCB,
+    games,
+    isNotResult,
+}: {
+    games: GamesForTable[];
+    isNotResult?: boolean;
+    onClickCB?: (game: GamesForTable, isNotResult?: boolean) => void;
+}) {
     return (
         <>
             <div
@@ -68,7 +76,19 @@ function Table({ games, isNotResult }: { games: GamesForTable[]; isNotResult?: b
                                 </Cell>
                                 <Cell colSpan={1}>No bets yet</Cell>
                                 <Cell colSpan={1}>No bets yet</Cell>
-                                <Cell colSpan={2}>Action</Cell>
+                                <Cell colSpan={2}>
+                                    <button
+                                        onClick={() =>
+                                            onClickCB ? onClickCB(game, isNotResult) : null
+                                        }
+                                        className="
+                                        hover:bg-white hover:text-nba-blue
+                                        ease-in-out duration-300
+                                        rounded border border-white px-6 py-2"
+                                    >
+                                        {isNotResult ? 'Bet' : 'Check Result'}
+                                    </button>
+                                </Cell>
                             </Fragment>
                         ))}
                     </div>
