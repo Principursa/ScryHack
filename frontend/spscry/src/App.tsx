@@ -10,6 +10,9 @@ function App() {
                 <Outlet />
             </div>
             <div className="background-player"></div>
+            <div className="pb-5 text-white text-center">
+                @CopyRight 2024 - Scry Hackathon - Made for educational purposes within the contest
+            </div>
         </>
     );
 }
