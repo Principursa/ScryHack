@@ -69,7 +69,8 @@ const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () =
                     ETH! The bet will be placed on the team you choose below. You will win the bet
                     according to spread points. Note to interact with the SmartContract you will
                     need to pay a small fee. This fee is not included in the 0.1 ETH you bet. The
-                    fee is 0.0005 ETH.
+                    fee is 0.0005 ETH. If you don't place a bet with 0.1005 ETH the bet will not be
+                    placed.
                 </p>
                 <div
                     style={{
@@ -80,7 +81,7 @@ const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () =
                     }}
                 >
                     <div className="font-thin text-white p-2 rounded mt-5 mr-5">
-                        Bet 0.1 Ether - plus 0.0005 Ether fee
+                        Required 0.1005 Ether
                     </div>
                     <button className="bg-green-500 text-white p-2 rounded mt-5 mr-5">
                         Bet on {game.home_team} ({game.home_points})
