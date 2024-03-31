@@ -25,6 +25,7 @@ export interface GamesForTable {
     away_points?: number | string;
     home_score?: number;
     away_score?: number;
+    betsLength?: number;
     commence_time: number; //in unix so smart contract conversion is easier
 }
 export {};

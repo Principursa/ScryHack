@@ -77,7 +77,7 @@ function Table({
                                     {isNotResult ? game.away_points : game.away_score}
                                 </Cell>
                                 <Cell colSpan={1}>{game?.betsLength}</Cell>
-                                <Cell colSpan={1}>{game?.betsLength * 0.1}</Cell>
+                                <Cell colSpan={1}>{(game?.betsLength || 0) * 0.1} Eth</Cell>
                                 <Cell colSpan={2}>
                                     <button
                                         disabled={disableButtonCb ? disableButtonCb(game) : false}
