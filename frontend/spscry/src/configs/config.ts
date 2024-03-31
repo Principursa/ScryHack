@@ -1,16 +1,15 @@
 import { http } from 'wagmi'
-import {sepolia,holesky } from 'wagmi/chains'
+import {holesky } from 'wagmi/chains'
 
 
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 
 
 export const config = getDefaultConfig({
-  appName: "SPScry",
-  projectId: 'b17dfb75dcaf111070742d4a6cbf0c5b',
-  chains: [sepolia,holesky],
+  appName: "ScryBall",
+  projectId: '956230dd841f3d0991c1f6efe7b4410b',
+  chains: [holesky],
   transports: {
-    [sepolia.id]: http(),
     [holesky.id]: http(),
   },
 })
