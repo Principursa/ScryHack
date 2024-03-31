@@ -1,6 +1,6 @@
-"use client";
-import { useState, useEffect } from "react";
-import axios from "axios";
+'use client';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 import { Table } from '#/components/Table';
 import { GamesForTable, gameObjectFE } from '#/types';
@@ -16,12 +16,10 @@ import { parseEther } from "viem";*/
 
 const baseListUrl = ' https://eventbuddy.snake-py.com/game/list';
 
-
 /* interface txInit {
   teamName: string;
   initiated: boolean;
 } */
-
 
 const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () => void }) => {
     return (
@@ -43,7 +41,7 @@ const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () =
                 onClick={(e) => e.stopPropagation()}
                 style={{
                     width: '50%',
-                    height: '50%',
+                    height: '40%',
                     backgroundColor: 'var(--bg-color)',
                     padding: '20px',
                     borderRadius: '10px',
@@ -53,23 +51,42 @@ const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () =
                     position: 'relative',
                 }}
             >
-                <h1 className="font-bold mb-5">
-                    Place a bet on {game.home_team} vs {game.away_team}
+                <h1
+                    style={{
+                        fontSize: '1.5rem',
+                    }}
+                >
+                    Place a bet on <b>{game.home_team}</b> vs <b>{game.away_team}</b>
                 </h1>
-                <p>Placing a bet means this process...</p>
+                <h2 className="font-thin">You are about to place a bet! Exciting!</h2>
+                <hr className="mb-8" />
+                <p style={{ textAlign: 'justify' }}>
+                    We just want to make sure you know what you are getting yourself into! Clicking
+                    one of the buttons below will cause the Frontend to connect to our
+                    SmartContract. To place a bet you will need to do in total 2 transactions. The
+                    first transaction will be to start the betting process and the second
+                    transaction will be to finalize the bet. You can only bet a fixed amount of 0.1
+                    ETH! The bet will be placed on the team you choose below. You will win the bet
+                    according to spread points. Note to interact with the SmartContract you will
+                    need to pay a small fee. This fee is not included in the 0.1 ETH you bet. The
+                    fee is 0.0005 ETH.
+                </p>
                 <div
                     style={{
                         position: 'absolute',
-                        bottom: 40,
-                        right: 40,
+                        bottom: 20,
+                        right: 20,
                         display: 'flex',
                     }}
                 >
+                    <div className="border-2 text-white p-2 rounded mt-5 mr-5">
+                        Bet 0.1 Ether - plus 0.0005 Ether fee
+                    </div>
                     <button className="bg-green-500 text-white p-2 rounded mt-5 mr-5">
-                        Bet on Home Team
+                        Bet on {game.home_team} ({game.home_points})
                     </button>
                     <button className="bg-green-500 text-white p-2 rounded mt-5">
-                        Bet on Away Team
+                        Bet on {game.away_team} ({game.away_points})
                     </button>
                 </div>
             </div>
@@ -81,15 +98,15 @@ function Upcoming() {
     const [Games, setGames] = useState<gameObjectFE[]>();
     const [modalGame, setModalGame] = useState<GamesForTable>();
     const [modalIsOpen, setIsOpen] = useState(false);
-   //const [txInitiated, setTxInitiated] = useState<txInit>({
-  //  teamName: "",
-   // initiated: false,
-  /* });*/
-  //Make this have a teamname + boolean structure
+    //const [txInitiated, setTxInitiated] = useState<txInit>({
+    //  teamName: "",
+    // initiated: false,
+    /* });*/
+    //Make this have a teamname + boolean structure
 
-  /* const { writeContract, isError, error } = useWriteContract(); */
+    /* const { writeContract, isError, error } = useWriteContract(); */
 
- /* function placeBetInitial(id: string, team: number, teamname: string) {
+    /* function placeBetInitial(id: string, team: number, teamname: string) {
     writeContract({
       abi: bettingABI.abi,
       address: Contracts.bettingContract,
@@ -109,7 +126,7 @@ function Upcoming() {
       },
     });
     console.log(result); */
-  /*  setTxInitiated({
+    /*  setTxInitiated({
       teamName: teamname,
       initiated: true,
     });
@@ -118,7 +135,7 @@ function Upcoming() {
     console.log(error);
   } */
 
-  /*function finalizeBet() {
+    /*function finalizeBet() {
     const { data: bets } = useReadContract({
       abi: bettingABI.abi,
       address: Contracts.bettingContract,
@@ -139,7 +156,7 @@ function Upcoming() {
       teamName: "",
       initiated: false,
     }); */
-  //}
+    //}
     useEffect(() => {
         axios.get(baseListUrl).then((response: any) => {
             console.log('response', response);
