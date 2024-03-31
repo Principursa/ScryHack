@@ -132,6 +132,9 @@ const Modal = ({
           {isConfirming && <div>Waiting for confirmation...</div>}
           {isConfirmed && <div>Transaction confirmed.</div>}
 
+
+
+// @ts-ignore
           <div
             style={{
               position: "absolute",
