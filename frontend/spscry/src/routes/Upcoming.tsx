@@ -105,32 +105,41 @@ const Modal = ({
           alignItems: "center",
         }}
       >
-        <div
-          onClick={(e) => e.stopPropagation()}
-          style={{
-            width: "50%",
-            height: "50%",
-            backgroundColor: "var(--bg-color)",
-            padding: "20px",
-            borderRadius: "10px",
-            display: "flex",
-            flexDirection: "column",
-            color: "white",
-            position: "relative",
-          }}
-        >
-          <h1 className="font-bold mb-5">
-            Place a bet on {game.home_team} vs {game.away_team}
-          </h1>
-          <p>Placing a bet means this process...</p>
+            <div onClick={(e) => e.stopPropagation()} className="modal">
+                <h1
+                    style={{
+                        fontSize: '1.5rem',
+                    }}
+                >
+                    Place a bet on <b>{game.home_team}</b> vs <b>{game.away_team}</b>
+                </h1>
+                <h2 className="font-thin">You think you have what it takes..? You ready to get down and put some money on the line!?</h2>
+                <hr className="mb-8" />
+                <p style={{ textAlign: 'justify', marginBottom: '100px' }}>
+                    We just want to make sure you know what you are getting yourself into! Clicking
+                    one of the buttons below will cause the Frontend to connect to our
+                    SmartContract. To place a bet you will need to do in total 2 transactions. The
+                    first transaction will be to start the betting process and the second
+                    transaction will be to finalize the bet. You can only bet a fixed amount of 0.1
+                    ETH! The bet will be placed on the team you choose below. You will win the bet
+                    according to spread points. Note to interact with the SmartContract you will
+                    need to pay a small fee. This fee is not included in the 0.1 ETH you bet. The
+                    fee is 0.0005 ETH. If you don't place a bet with 0.1005 ETH the bet will not be
+                    placed.
+                </p>
+
+   
           {isConfirming && <div>Waiting for confirmation...</div>}
           {isConfirmed && <div>Transaction confirmed.</div>}
 
+
+
+// @ts-ignore
           <div
             style={{
               position: "absolute",
-              bottom: 40,
-              right: 40,
+              bottom: 20,
+              right: 20,
               display: "flex",
             }}
           >
