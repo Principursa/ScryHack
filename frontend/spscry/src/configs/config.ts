@@ -1,5 +1,5 @@
 import { http } from 'wagmi'
-import {sepolia,holesky } from 'wagmi/chains'
+import {holesky } from 'wagmi/chains'
 
 
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';

@@ -15,6 +15,7 @@ import BigNumber from "bignumber.js";
 import { Contracts } from "../Abis/contracts";
 import bettingABI from "../Abis/Betting.json";
 import { parseEther } from "viem";
+import { unknown } from "node_modules/wagmi/dist/types/hooks/useReadContracts";
 
 const baseListUrl = " https://eventbuddy.snake-py.com/game/list";
 
@@ -35,6 +36,7 @@ const Modal = ({
     teamName: "",
     initiated: false,
   });
+// @ts-ignore
   let { data: myBets } = useReadContract({
     abi: bettingABI.abi,
     address: Contracts.bettingContract,
@@ -49,9 +51,9 @@ const Modal = ({
     });
 
   function finalizeBet() {
-    console.log("myBets", myBets);
     console.log(account.address);
     console.log(txInitiated);
+    // @ts-ignore
     const latestBetId = new BigNumber(myBets[myBets.length - 1].betId);
     console.log(latestBetId.toNumber());
     writeContract({
