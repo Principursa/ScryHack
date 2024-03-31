@@ -79,7 +79,7 @@ const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () =
                         display: 'flex',
                     }}
                 >
-                    <div className="border-2 text-white p-2 rounded mt-5 mr-5">
+                    <div className="font-thin text-white p-2 rounded mt-5 mr-5">
                         Bet 0.1 Ether - plus 0.0005 Ether fee
                     </div>
                     <button className="bg-green-500 text-white p-2 rounded mt-5 mr-5">
