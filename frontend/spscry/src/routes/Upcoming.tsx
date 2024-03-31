@@ -9,7 +9,6 @@ import BigNumber from 'bignumber.js';
 import { Contracts } from '../Abis/contracts';
 import bettingABI from '../Abis/Betting.json';
 import { parseEther } from 'viem';
-import { useQueryClient } from '@tanstack/react-query';
 
 const baseListUrl = ' https://eventbuddy.snake-py.com/game/list';
 interface txInit {
@@ -24,7 +23,7 @@ const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () =
         teamName: '',
         initiated: false,
     });
-    const { data: myBets, refetch } = useReadContract({
+    const { refetch } = useReadContract({
         abi: bettingABI.abi,
         address: Contracts.bettingContract,
         functionName: 'getMyBets',
@@ -35,7 +34,6 @@ const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () =
         isError: isInitError,
         error: initError,
         isSuccess: isInitSuccess,
-        data: hashInit,
         writeContract: init,
     } = useWriteContract();
 
