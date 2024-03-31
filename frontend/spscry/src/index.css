@@ -64,6 +64,29 @@ body {
     width: 3rem;
     height: 3rem;
 }
+
+.modal {
+    width: 50%;
+    background-color: var(--bg-color);
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    position: relative;
+}
+@media (max-width: 900px) {
+    .modal {
+        width: 80%;
+    }
+}
+
+@media (max-width: 430px) {
+    .modal {
+        width: 100%;
+    }
+}
+
 /* a {
     font-weight: 500;
     color: #646cff;

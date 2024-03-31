@@ -39,17 +39,17 @@ const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () =
         >
             <div
                 onClick={(e) => e.stopPropagation()}
-                style={{
-                    width: '50%',
-                    height: '40%',
-                    backgroundColor: 'var(--bg-color)',
-                    padding: '20px',
-                    borderRadius: '10px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    color: 'white',
-                    position: 'relative',
-                }}
+                className="modal"
+                // style={{
+                //     width: '50%',
+                //     backgroundColor: 'var(--bg-color)',
+                //     padding: '20px',
+                //     borderRadius: '10px',
+                //     display: 'flex',
+                //     flexDirection: 'column',
+                //     color: 'white',
+                //     position: 'relative',
+                // }}
             >
                 <h1
                     style={{
@@ -60,7 +60,7 @@ const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () =
                 </h1>
                 <h2 className="font-thin">You are about to place a bet! Exciting!</h2>
                 <hr className="mb-8" />
-                <p style={{ textAlign: 'justify' }}>
+                <p style={{ textAlign: 'justify', marginBottom: '100px' }}>
                     We just want to make sure you know what you are getting yourself into! Clicking
                     one of the buttons below will cause the Frontend to connect to our
                     SmartContract. To place a bet you will need to do in total 2 transactions. The
