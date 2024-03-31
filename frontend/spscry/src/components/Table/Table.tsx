@@ -89,7 +89,11 @@ function Table({
                                         ease-in-out duration-300
                                         rounded border border-white px-6 py-2"
                                     >
-                                        {isNotResult ? 'Bet' : 'Check Result'}
+                                        {isNotResult
+                                            ? 'Bet'
+                                            : game.gameResultHash
+                                            ? 'Distribute'
+                                            : 'Check Result'}
                                     </button>
                                 </Cell>
                             </Fragment>

@@ -26,6 +26,7 @@ export interface GamesForTable {
     home_score?: number;
     away_score?: number;
     betsLength?: number;
+    gameResultHash?: string;
     commence_time: number; //in unix so smart contract conversion is easier
 }
 export {};
