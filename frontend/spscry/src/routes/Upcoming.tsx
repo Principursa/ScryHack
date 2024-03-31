@@ -84,10 +84,10 @@ function Upcoming() {
    //const [txInitiated, setTxInitiated] = useState<txInit>({
     teamName: "",
     initiated: false,
-  });
+  /* });*/
   //Make this have a teamname + boolean structure
 
-  const { writeContract, isError, error } = useWriteContract();
+  /* const { writeContract, isError, error } = useWriteContract(); */
 
  /* function placeBetInitial(id: string, team: number, teamname: string) {
     writeContract({
@@ -109,14 +109,14 @@ function Upcoming() {
       },
     });
     console.log(result); */
-    setTxInitiated({
+  /*  setTxInitiated({
       teamName: teamname,
       initiated: true,
     });
 
     console.log(isError);
     console.log(error);
-  }
+  } */
 
   /*function finalizeBet() {
     const { data: bets } = useReadContract({
@@ -139,7 +139,7 @@ function Upcoming() {
       teamName: "",
       initiated: false,
     }); */
-  }
+  //}
     useEffect(() => {
         axios.get(baseListUrl).then((response: any) => {
             console.log('response', response);
@@ -173,7 +173,6 @@ function Upcoming() {
             )}
         </>
     );
-
 }
 
 export default Upcoming;
