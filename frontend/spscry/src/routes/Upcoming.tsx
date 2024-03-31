@@ -18,7 +18,6 @@ interface txInit {
 
 const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () => void }) => {
     const [isFinalized, setIsFinalized] = useState(false);
-    const [betIsInitiated, setBetIsInitiated] = useState(false);
     const account = useAccount();
     const [txInitiated, setTxInitiated] = useState<txInit>({
         teamName: '',
@@ -34,7 +33,6 @@ const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () =
     const {
         isError: isInitError,
         error: initError,
-        data: initHash,
         isSuccess: isInitSuccess,
         writeContract: init,
     } = useWriteContract();
@@ -46,6 +44,7 @@ const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () =
     function finalizeBet() {
         console.log(account.address);
         console.log(txInitiated);
+        //@ts-ignore
         const latestBetId = new BigNumber(myBets[myBets.length - 1].betId);
         console.log(latestBetId.toNumber());
         writeContract({
@@ -229,9 +228,10 @@ function Upcoming() {
         setIsOpen(true);
     };
     const disableButtonCb = (game: GamesForTable) => {
-        if (game.commence_time < Date.now() / 1000) {
-            return true;
+        if (game.commence_time > Date.now() / 1000) {
+            return false;
         }
+        return true;
     };
     return (
         <>

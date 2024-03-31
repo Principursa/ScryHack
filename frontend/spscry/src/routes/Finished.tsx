@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table } from '#/components/Table';
-import { GameResultFE } from '#/types';
+import { GameResultFE, GamesForTable } from '#/types';
 import { useAccount, useReadContract } from 'wagmi';
 import { Contracts } from '../Abis/contracts';
 import bettingABI from '../Abis/Betting.json';
@@ -36,12 +36,27 @@ function Finished() {
         });
         console.log(Games);
     }, [bets]);
-    const disableButtonCb = (game: GamesForTable) => {
-        // maybe do a check?
-        return false;
+
+    const onClick = (game: GamesForTable) => {
+        console.log('clicked', game);
     };
 
-    return <>{Games ? <Table games={Games} disableButtonCb={disableButtonCb} /> : <></>}</>;
+    const disableButtonCb = (game: GamesForTable) => {
+        if (game.commence_time < Date.now() / 1000) {
+            return false;
+        }
+        return true;
+    };
+
+    return (
+        <>
+            {Games ? (
+                <Table games={Games} disableButtonCb={disableButtonCb} onClickCB={onClick} />
+            ) : (
+                <></>
+            )}
+        </>
+    );
 }
 
 export default Finished;
