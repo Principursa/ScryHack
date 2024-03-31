@@ -20,13 +20,14 @@ body {
 
 .main-container {
     display: flex;
+
     justify-content: center;
-    padding-top: 10rem;
+    padding: 8rem 0;
 }
 
 .glass-container {
-    width: 60vw;
-    height: 60vh;
+    width: 45vw;
+    padding: 2rem 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
