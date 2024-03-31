@@ -7,8 +7,10 @@ import { GamesForTable, gameObjectFE } from "#/types";
 import {
   useWriteContract,
   useReadContract,
-  // useWaitForTransactionReceipt,
+  useAccount,
+  useWaitForTransactionReceipt,
 } from "wagmi";
+import BigNumber from "bignumber.js";
 
 import { Contracts } from "../Abis/contracts";
 import bettingABI from "../Abis/Betting.json";
@@ -28,31 +30,49 @@ const Modal = ({
   game: GamesForTable;
   onCloseModal: () => void;
 }) => {
+  const account = useAccount();
   const [txInitiated, setTxInitiated] = useState<txInit>({
     teamName: "",
     initiated: false,
   });
-    let {result : myBets} = useReadContract({
-        abi: bettingABI.abi,
-        address: Contracts.bettingContract,
-        functionName: "getMyBets",
-        args: []
-    })
+  let { data: myBets } = useReadContract({
+    abi: bettingABI.abi,
+    address: Contracts.bettingContract,
+    functionName: "getMyBets",
+    account: account.address,
+  });
 
-  const { writeContract, isError, error } = useWriteContract();
+  const { isError, error, data: hash, writeContract } = useWriteContract();
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
 
   function finalizeBet() {
-    console.log(myBets)
-    console.log(txInitiated)
-
-/*     const { data: bets } = useReadContract({
+    console.log("myBets", myBets);
+    console.log(account.address);
+    console.log(txInitiated);
+    const latestBetId = new BigNumber(myBets[myBets.length - 1].betId);
+    console.log(latestBetId.toNumber());
+    writeContract({
       abi: bettingABI.abi,
       address: Contracts.bettingContract,
-      functionName: "getMyBets",
-      args: [],
-    }); */
+      functionName: "finalizeBetProcess",
+      args: [latestBetId.toNumber()],
+    });
+    setTxInitiated({
+      teamName: "",
+      initiated: false,
+    });
+    console.log(hash);
+    console.log(txInitiated);
+    console.log(isError, error);
   }
   function placeBetInitial(id: string, team: number, teamname: string) {
+    setTxInitiated({
+      teamName: teamname,
+      initiated: true,
+    });
     writeContract({
       abi: bettingABI.abi,
       address: Contracts.bettingContract,
@@ -60,105 +80,86 @@ const Modal = ({
       args: [id, team],
       value: parseEther("0.1005"),
     });
-    /* const result = useWaitForTransactionReceipt({
-      hash: trx?.hash,
-      confirmations: 1,
-      onSuccess: () => {
-        setTxInitiated({
-          teamName: teamname,
-          initiated: true,
-        });
-        console.log("success from wait tx");
-      },
-    });
-    console.log(result); */
 
-    setTxInitiated({
-      teamName: teamname,
-      initiated: true,
-    });
+    console.log("txinit", txInitiated);
 
-    console.log(isError);
-    console.log(error);
+    console.log("isError", isError);
+    console.log("error", error);
   }
 
-  /*     const length = bets.length;
-    const latestBet = bets[length - 1];
-    console.log("latestBet:", latestBet);
-    writeContract({
-      abi: bettingABI.abi,
-      address: Contracts.bettingContract,
-      functionName: "finalizeBetProcess",
-      args: [latestBet.betId],
-    });
-    setTxInitiated({
-      teamName: "",
-      initiated: false,
-    }); */
 
   return (
-    <div
-      onClick={onCloseModal}
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <>
       <div
-        onClick={(e) => e.stopPropagation()}
+        onClick={onCloseModal}
         style={{
-          width: "50%",
-          height: "50%",
-          backgroundColor: "var(--bg-color)",
-          padding: "20px",
-          borderRadius: "10px",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
           display: "flex",
-          flexDirection: "column",
-          color: "white",
-          position: "relative",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <h1 className="font-bold mb-5">
-          Place a bet on {game.home_team} vs {game.away_team}
-        </h1>
-        <p>Placing a bet means this process...</p>
         <div
+          onClick={(e) => e.stopPropagation()}
           style={{
-            position: "absolute",
-            bottom: 40,
-            right: 40,
+            width: "50%",
+            height: "50%",
+            backgroundColor: "var(--bg-color)",
+            padding: "20px",
+            borderRadius: "10px",
             display: "flex",
+            flexDirection: "column",
+            color: "white",
+            position: "relative",
           }}
         >
-          <button
-            className="bg-green-500 text-white p-2 rounded mt-5 mr-5"
-            onClick={() => placeBetInitial(game.id, 0, game.home_team)}
-          >
-            Bet on Home Team
-          </button>
-          <button
-            className="bg-green-500 text-white p-2 rounded mt-5"
-            onClick={() => placeBetInitial(game.id, 1, game.away_team)}
-          >
-            Bet on Away Team
-          </button>
+          <h1 className="font-bold mb-5">
+            Place a bet on {game.home_team} vs {game.away_team}
+          </h1>
+          <p>Placing a bet means this process...</p>
+          {isConfirming && <div>Waiting for confirmation...</div>}
+          {isConfirmed && <div>Transaction confirmed.</div>}
 
-          <button
-            className="bg-green-500 text-white p-2 rounded mt-5"
-            onClick={() => finalizeBet()}
+          <div
+            style={{
+              position: "absolute",
+              bottom: 40,
+              right: 40,
+              display: "flex",
+            }}
           >
-            Finalize Bet
-          </button>
+            {txInitiated.initiated == true ? (
+              <button
+                className="bg-green-500 text-white p-2 rounded mt-5"
+                onClick={() => finalizeBet()}
+              >
+                Finalize Bet
+              </button>
+            ) : (
+              <div>
+                <button
+                  className="bg-green-500 text-white p-2 rounded mt-5 mr-5"
+                  onClick={() => placeBetInitial(game.id, 0, game.home_team)}
+                >
+                  Bet on Home Team
+                </button>
+                <button
+                  className="bg-green-500 text-white p-2 rounded mt-5"
+                  onClick={() => placeBetInitial(game.id, 1, game.away_team)}
+                >
+                  Bet on Away Team
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
