@@ -141,7 +141,6 @@ const Modal = ({
               bottom: 20,
               right: 20,
               display: "flex",
-              text: "white"
             }}
           >
             {txInitiated.initiated == true ? (
