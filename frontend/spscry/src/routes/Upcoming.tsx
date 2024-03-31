@@ -82,8 +82,8 @@ function Upcoming() {
     const [modalGame, setModalGame] = useState<GamesForTable>();
     const [modalIsOpen, setIsOpen] = useState(false);
    //const [txInitiated, setTxInitiated] = useState<txInit>({
-    teamName: "",
-    initiated: false,
+  //  teamName: "",
+   // initiated: false,
   /* });*/
   //Make this have a teamname + boolean structure
 
