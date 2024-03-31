@@ -14,7 +14,12 @@ function Finished() {
             setGames(response.data);
         });
     }, []);
-    return <>{Games ? <Table games={Games} /> : <></>}</>;
+    const disableButtonCb = (game: gameObjectFE) => {
+        // maybe do a check?
+        return false;
+    };
+
+    return <>{Games ? <Table games={Games} disableButtonCb={disableButtonCb} /> : <></>}</>;
 }
 
 export default Finished;

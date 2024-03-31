@@ -158,6 +158,11 @@ function Upcoming() {
         setIsOpen(true);
     };
 
+    const disableButtonCb = (game: gameObjectFE) => {
+        //@TODO: Implement logic to disable button
+        return false;
+    };
+
     return (
         <>
             {Games ? (
@@ -171,7 +176,12 @@ function Upcoming() {
                             }}
                         />
                     )}
-                    <Table isNotResult games={Games} onClickCB={onClick} />
+                    <Table
+                        isNotResult
+                        games={Games}
+                        onClickCB={onClick}
+                        disableButtonCb={disableButtonCb}
+                    />
                 </>
             ) : (
                 <></>

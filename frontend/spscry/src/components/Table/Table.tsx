@@ -26,10 +26,12 @@ function Table({
     onClickCB,
     games,
     isNotResult,
+    disableButtonCb,
 }: {
     games: GamesForTable[];
     isNotResult?: boolean;
     onClickCB?: (game: GamesForTable, isNotResult?: boolean) => void;
+    disableButtonCb?: (game: GamesForTable) => boolean;
 }) {
     return (
         <>
@@ -78,6 +80,7 @@ function Table({
                                 <Cell colSpan={1}>No bets yet</Cell>
                                 <Cell colSpan={2}>
                                     <button
+                                        disabled={disableButtonCb ? disableButtonCb(game) : false}
                                         onClick={() =>
                                             onClickCB ? onClickCB(game, isNotResult) : null
                                         }
