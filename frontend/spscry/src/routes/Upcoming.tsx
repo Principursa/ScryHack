@@ -158,7 +158,7 @@ function Upcoming() {
         setIsOpen(true);
     };
 
-    const disableButtonCb = (game: gameObjectFE) => {
+    const disableButtonCb = (game: GamesForTable) => {
         //@TODO: Implement logic to disable button
         return false;
     };

@@ -14,7 +14,7 @@ function Finished() {
             setGames(response.data);
         });
     }, []);
-    const disableButtonCb = (game: gameObjectFE) => {
+    const disableButtonCb = (game: GamesForTable) => {
         // maybe do a check?
         return false;
     };
