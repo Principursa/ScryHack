@@ -228,7 +228,11 @@ function Upcoming() {
         setModalGame(game);
         setIsOpen(true);
     };
-
+    const disableButtonCb = (game: GamesForTable) => {
+        if (game.commence_time < Date.now() / 1000) {
+            return true;
+        }
+    };
     return (
         <>
             {Games ? (
@@ -242,7 +246,12 @@ function Upcoming() {
                             }}
                         />
                     )}
-                    <Table isNotResult games={Games} onClickCB={onClick} />
+                    <Table
+                        isNotResult
+                        games={Games}
+                        onClickCB={onClick}
+                        disableButtonCb={disableButtonCb}
+                    />
                 </>
             ) : (
                 <></>
