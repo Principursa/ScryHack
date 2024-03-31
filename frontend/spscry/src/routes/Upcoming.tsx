@@ -15,7 +15,6 @@ import BigNumber from "bignumber.js";
 import { Contracts } from "../Abis/contracts";
 import bettingABI from "../Abis/Betting.json";
 import { parseEther } from "viem";
-import { unknown } from "node_modules/wagmi/dist/types/hooks/useReadContracts";
 
 const baseListUrl = " https://eventbuddy.snake-py.com/game/list";
 
