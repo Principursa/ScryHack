@@ -48,8 +48,8 @@ function Table({
                         <Cell colSpan={2}>Away Team</Cell>
                         <Cell colSpan={1}>{isNotResult ? 'Home Odds' : 'Home Score'}</Cell>
                         <Cell colSpan={1}>{isNotResult ? 'Away Odds' : 'Away Score'}</Cell>
-                        <Cell colSpan={1}>Current Bet</Cell>
-                        <Cell colSpan={1}>Allowed Bet</Cell>
+                        <Cell colSpan={1}>Bets</Cell>
+                        <Cell colSpan={1}>In Pot</Cell>
                         <Cell colSpan={2}>Action</Cell>
                     </div>
                     <div
@@ -76,8 +76,8 @@ function Table({
                                 <Cell colSpan={1}>
                                     {isNotResult ? game.away_points : game.away_score}
                                 </Cell>
-                                <Cell colSpan={1}>No bets yet</Cell>
-                                <Cell colSpan={1}>No bets yet</Cell>
+                                <Cell colSpan={1}>{game?.betsLength}</Cell>
+                                <Cell colSpan={1}>{game?.betsLength * 0.1}</Cell>
                                 <Cell colSpan={2}>
                                     <button
                                         disabled={disableButtonCb ? disableButtonCb(game) : false}
