@@ -2,43 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
-
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  margin: 0;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+    --bg-color: #171717;
+    --bg-color-light: #111111;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+    background-color: #171717;
+    margin: 0;
+    /* overflow: hidden; */
 }
 
-h1 {
+.neumorphism {
+    background: #171717;
+    box-shadow: 10px 10px 20px #111111, -3px -3px 20px #111111;
+}
+
+.main-container {
+    display: flex;
+    justify-content: center;
+    padding-top: 10rem;
+}
+
+.glass-container {
+    width: 60vw;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.glass {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.background-player {
+    position: fixed;
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 60vh;
+    width: 60vw;
+    overflow: hidden;
+    background-image: url('/BallPlayer.svg');
+    padding: 1.5em 0;
+    bottom: 0;
+    left: 3%;
+    z-index: -1;
+}
+
+.table-content__logo-container {
+    display: flex;
+    justify-content: center;
+}
+
+.table-content__logo-container svg {
+    width: 3rem;
+    height: 3rem;
+}
+/* a {
+    font-weight: 500;
+    color: #646cff;
+    text-decoration: inherit;
+}
+a:hover {
+    color: #535bf2;
+} */
+
+/* h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
@@ -73,13 +107,20 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */
+/* :root {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
 
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
 
-* {    
-    margin: 0 !important;
-    padding: 0 !important;
-}
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 
-
-
+    margin: 0;
+} */

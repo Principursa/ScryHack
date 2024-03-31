@@ -2,55 +2,101 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-import {
+import { Table } from '#/components/Table';
+import { GamesForTable, gameObjectFE } from '#/types';
+/*import {
   useWriteContract,
  // useReadContract,
  // useWaitForTransactionReceipt,
 } from "wagmi";
 
-import returnlogo from "../utils/getLogos";
 import { Contracts } from "../Abis/contracts";
 import bettingABI from "../Abis/Betting.json";
-import { parseEther } from "viem";
-import convertUnixToDate from "../utils/convertDate";
+import { parseEther } from "viem";*/
 
-const baseListUrl = " https://eventbuddy.snake-py.com/game/list";
+const baseListUrl = ' https://eventbuddy.snake-py.com/game/list';
 
-interface gameObjectFE {
-  id: string;
-  home_team: string;
-  away_team: string;
-  home_points: number | string;
-  away_points: number | string;
-  commence_time: number; //in unix so smart contract conversion is easier
-}
 
-/*  const bettingABI = parseAbi([
-  "startBetProcess(string memory gameId, Team winningTeam)", //Might be some issues with the enum here
-]); */
-interface txInit {
+/* interface txInit {
   teamName: string;
   initiated: boolean;
-}
+} */
+
+
+const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () => void }) => {
+    return (
+        <div
+            onClick={onCloseModal}
+            style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        >
+            <div
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                    width: '50%',
+                    height: '50%',
+                    backgroundColor: 'var(--bg-color)',
+                    padding: '20px',
+                    borderRadius: '10px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    color: 'white',
+                    position: 'relative',
+                }}
+            >
+                <h1 className="font-bold mb-5">
+                    Place a bet on {game.home_team} vs {game.away_team}
+                </h1>
+                <p>Placing a bet means this process...</p>
+                <div
+                    style={{
+                        position: 'absolute',
+                        bottom: 40,
+                        right: 40,
+                        display: 'flex',
+                    }}
+                >
+                    <button className="bg-green-500 text-white p-2 rounded mt-5 mr-5">
+                        Bet on Home Team
+                    </button>
+                    <button className="bg-green-500 text-white p-2 rounded mt-5">
+                        Bet on Away Team
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 function Upcoming() {
-  const [Games, setGames] = useState<gameObjectFE[]>();
-  const [txInitiated, setTxInitiated] = useState<txInit>({
-    teamName: "",
-    initiated: false,
-  });
+    const [Games, setGames] = useState<gameObjectFE[]>();
+    const [modalGame, setModalGame] = useState<GamesForTable>();
+    const [modalIsOpen, setIsOpen] = useState(false);
+   //const [txInitiated, setTxInitiated] = useState<txInit>({
+  //  teamName: "",
+   // initiated: false,
+  /* });*/
   //Make this have a teamname + boolean structure
 
-  const { writeContract, isError, error } = useWriteContract();
+  /* const { writeContract, isError, error } = useWriteContract(); */
 
-  function placeBetInitial(id: string, team: number, teamname: string) {
+ /* function placeBetInitial(id: string, team: number, teamname: string) {
     writeContract({
       abi: bettingABI.abi,
       address: Contracts.bettingContract,
       functionName: "startBetProcess",
       args: [id, team],
       value: parseEther("0.1005"),
-    });
+    });*/
     /* const result = useWaitForTransactionReceipt({
       hash: trx?.hash,
       confirmations: 1,
@@ -63,17 +109,17 @@ function Upcoming() {
       },
     });
     console.log(result); */
-    setTxInitiated({
+  /*  setTxInitiated({
       teamName: teamname,
       initiated: true,
     });
 
     console.log(isError);
     console.log(error);
-  }
+  } */
 
-  function finalizeBet() {
-/*     const { data: bets } = useReadContract({
+  /*function finalizeBet() {
+    const { data: bets } = useReadContract({
       abi: bettingABI.abi,
       address: Contracts.bettingContract,
       functionName: "getMyBets",
@@ -93,83 +139,40 @@ function Upcoming() {
       teamName: "",
       initiated: false,
     }); */
-  }
+  //}
+    useEffect(() => {
+        axios.get(baseListUrl).then((response: any) => {
+            console.log('response', response);
+            setGames(response.data);
+        });
+        console.log(Games);
+    }, []);
+    const onClick = (game: GamesForTable) => {
+        console.log('clicked', game);
+        setModalGame(game);
+        setIsOpen(true);
+    };
 
-  useEffect(() => {
-    axios.get(baseListUrl).then((response: any) => {
-      console.log("response", response);
-      setGames(response.data);
-    });
-    console.log(Games);
-  }, []);
-
-  return (
-    <>
-      <div className="grid grid-cols-7">
-        <div className="text-black flex flex-col col-start-2 col-span-5 items-center">
-          <h1> Upcoming Games</h1>
-          <table className="text-black w-50 h-50 border-black">
-            <tbody>
-              <tr className="border-b-4 border-black ">
-                <th>Date</th>
-                <th>Home Team</th>
-                <th>Away Team</th>
-                <th>Home Odds</th>
-                <th>Away Odds</th>
-                <th>Current Bet</th>
-                <th>Allowed Bet</th>
-                <th></th>
-              </tr>
-              {Games?.map((game, index) => (
-                <tr key={index.toString()}>
-                  <td>{convertUnixToDate(game.commence_time)}</td>
-                  <td>
-                    {returnlogo(game.home_team)}
-                    {txInitiated.teamName == game.home_team &&
-                    txInitiated.initiated == true ? (
-                      <button
-                        className="text-white w-20 "
-                        onClick={() => finalizeBet()}
-                      >
-                        Finalize Bet
-                      </button>
-                    ) : (
-                      <button
-                        className="text-white w-20 "
-                        onClick={() =>
-                          placeBetInitial(game.id, 0, game.home_team)
-                        }
-                      >
-                        Bet
-                      </button>
+    return (
+        <>
+            {Games ? (
+                <>
+                    {modalIsOpen && modalGame && (
+                        <Modal
+                            game={modalGame}
+                            onCloseModal={() => {
+                                setIsOpen(false);
+                                setModalGame(undefined);
+                            }}
+                        />
                     )}
-                  </td>
-                  <td>
-                    {returnlogo(game.away_team)}
-
-                    <button
-                      className="text-white w-20 "
-                      onClick={() =>
-                        placeBetInitial(game.id, 1, game.away_team)
-                      }
-                    >
-                      Bet
-                    </button>
-                  </td>
-                  <td>{game.home_points}</td>
-                  <td>{game.away_points}</td>
-                  <td>No bets yet</td>
-                  <td>No bets yet</td>
-
-                  <td></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </>
-  );
+                    <Table isNotResult games={Games} onClickCB={onClick} />
+                </>
+            ) : (
+                <></>
+            )}
+        </>
+    );
 }
 
 export default Upcoming;
