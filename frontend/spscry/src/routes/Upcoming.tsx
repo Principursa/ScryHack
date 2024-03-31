@@ -37,20 +37,7 @@ const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () =
                 alignItems: 'center',
             }}
         >
-            <div
-                onClick={(e) => e.stopPropagation()}
-                className="modal"
-                // style={{
-                //     width: '50%',
-                //     backgroundColor: 'var(--bg-color)',
-                //     padding: '20px',
-                //     borderRadius: '10px',
-                //     display: 'flex',
-                //     flexDirection: 'column',
-                //     color: 'white',
-                //     position: 'relative',
-                // }}
-            >
+            <div onClick={(e) => e.stopPropagation()} className="modal">
                 <h1
                     style={{
                         fontSize: '1.5rem',
