@@ -73,13 +73,13 @@ const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () =
                         Required 0.1005 Ether
                     </div>
                     <button
-                        onClick={() => handleBetCall(game.id, 0)}
+                        // onClick={() => handleBetCall(game.id, 0)}
                         className="bg-green-500 text-white p-2 rounded mt-5 mr-5"
                     >
                         Bet on {game.home_team} ({game.home_points})
                     </button>
                     <button
-                        onClick={() => handleBetCall(game.id, 1)}
+                        // onClick={() => handleBetCall(game.id, 1)}
                         className="bg-green-500 text-white p-2 rounded mt-5"
                     >
                         Bet on {game.away_team} ({game.away_points})
