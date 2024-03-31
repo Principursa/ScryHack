@@ -9,6 +9,7 @@ import BigNumber from 'bignumber.js';
 import { Contracts } from '../Abis/contracts';
 import bettingABI from '../Abis/Betting.json';
 import { parseEther } from 'viem';
+import { useQueryClient } from '@tanstack/react-query';
 
 const baseListUrl = ' https://eventbuddy.snake-py.com/game/list';
 interface txInit {
@@ -23,7 +24,7 @@ const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () =
         teamName: '',
         initiated: false,
     });
-    const { data: myBets } = useReadContract({
+    const { data: myBets, refetch } = useReadContract({
         abi: bettingABI.abi,
         address: Contracts.bettingContract,
         functionName: 'getMyBets',
@@ -34,19 +35,27 @@ const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () =
         isError: isInitError,
         error: initError,
         isSuccess: isInitSuccess,
+        data: hashInit,
         writeContract: init,
     } = useWriteContract();
+
     const { isError, error, data: hash, writeContract } = useWriteContract();
     const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
         hash,
     });
 
-    function finalizeBet() {
+    async function finalizeBet() {
         console.log(account.address);
         console.log(txInitiated);
-        //@ts-ignore
-        const latestBetId = new BigNumber(myBets[myBets.length - 1].betId);
-        console.log(latestBetId.toNumber());
+        const { data } = await refetch();
+        const bets = data as { betId: string; status: number }[];
+        console.log('bets', bets);
+        const latestBet = bets[bets.length - 1];
+        if (!latestBet || latestBet.status != 0) {
+            return;
+        }
+        const latestBetId = new BigNumber(latestBet.betId);
+        console.log('latestBetId', latestBetId.toNumber());
         writeContract({
             abi: bettingABI.abi,
             address: Contracts.bettingContract,
@@ -207,8 +216,6 @@ function Upcoming() {
     useEffect(() => {
         axios.get(baseListUrl).then((response: any) => {
             let gameObjects = response.data;
-            console.log('response', response);
-            console.log('bets', bets);
             if (bets && Array.isArray(bets)) {
                 gameObjects = gameObjects.map((game) => {
                     const bet = bets.filter((bet) => bet.gameId === game.id);
@@ -223,7 +230,6 @@ function Upcoming() {
         console.log(Games);
     }, [bets, modalIsOpen]);
     const onClick = (game: GamesForTable) => {
-        console.log('clicked', game);
         setModalGame(game);
         setIsOpen(true);
     };
