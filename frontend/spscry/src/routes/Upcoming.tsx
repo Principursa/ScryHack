@@ -4,6 +4,8 @@ import axios from 'axios';
 
 import { Table } from '#/components/Table';
 import { GamesForTable, gameObjectFE } from '#/types';
+import { useAccount, useSendTransaction, useWriteContract } from 'wagmi';
+import { parseEther } from 'viem';
 /*import {
   useWriteContract,
  // useReadContract,
@@ -70,10 +72,16 @@ const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () =
                     <div className="font-thin text-white p-2 rounded mt-5 mr-5">
                         Required 0.1005 Ether
                     </div>
-                    <button className="bg-green-500 text-white p-2 rounded mt-5 mr-5">
+                    <button
+                        onClick={() => handleBetCall(game.id, 0)}
+                        className="bg-green-500 text-white p-2 rounded mt-5 mr-5"
+                    >
                         Bet on {game.home_team} ({game.home_points})
                     </button>
-                    <button className="bg-green-500 text-white p-2 rounded mt-5">
+                    <button
+                        onClick={() => handleBetCall(game.id, 1)}
+                        className="bg-green-500 text-white p-2 rounded mt-5"
+                    >
                         Bet on {game.away_team} ({game.away_points})
                     </button>
                 </div>
@@ -145,6 +153,8 @@ function Upcoming() {
       initiated: false,
     }); */
     //}
+    const { address } = useAccount();
+
     useEffect(() => {
         axios.get(baseListUrl).then((response: any) => {
             console.log('response', response);
@@ -160,7 +170,7 @@ function Upcoming() {
 
     const disableButtonCb = (game: GamesForTable) => {
         //@TODO: Implement logic to disable button
-        return false;
+        return Boolean(!address);
     };
 
     return (
