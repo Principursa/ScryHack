@@ -4,7 +4,7 @@ import axios from "axios";
 
 import { Table } from '#/components/Table';
 import { GamesForTable, gameObjectFE } from '#/types';
-import {
+/*import {
   useWriteContract,
  // useReadContract,
  // useWaitForTransactionReceipt,
@@ -12,15 +12,15 @@ import {
 
 import { Contracts } from "../Abis/contracts";
 import bettingABI from "../Abis/Betting.json";
-import { parseEther } from "viem";
+import { parseEther } from "viem";*/
 
 const baseListUrl = ' https://eventbuddy.snake-py.com/game/list';
 
 
-interface txInit {
+/* interface txInit {
   teamName: string;
   initiated: boolean;
-}
+} */
 
 
 const Modal = ({ game, onCloseModal }: { game: GamesForTable; onCloseModal: () => void }) => {
